@@ -14,6 +14,7 @@ class SoundViewController: UIViewController {
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var playButtomn: UIButton!
+    @IBOutlet weak var addButton: UIButton!
     
     var audioRecorder:AVAudioRecorder?
     var audioPlayer: AVAudioPlayer?
@@ -23,8 +24,10 @@ class SoundViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-  setupRecorder()
+        setupRecorder()
         playButtomn.isEnabled = false
+        addButton.isEnabled = false
+        
     
     }
 
@@ -65,6 +68,7 @@ class SoundViewController: UIViewController {
             //change button title to record
             recordButton.setTitle("Record", for: .normal)
             playButtomn.isEnabled = true
+            addButton.isEnabled = true
         }else {
             //Start the recording
             audioRecorder?.record()
@@ -84,8 +88,15 @@ class SoundViewController: UIViewController {
         
     }
     @IBAction func AddTapped(_ sender: Any) {
-    
+        
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let sound = Sound(context: context)
+        
+        sound.name = nameTextField.text
+        sound.audio = NSData(contentsOf: audioURL!)
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
+        navigationController!.popViewController(animated: true)
+        
     }
-
 }
 
